@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import type { Product, Paginated } from "@/types/api";
 
+const LOW_STOCK_THRESHOLD = 10
+
 export default function ProductList() {
   const [data, setData] = useState<Paginated<Product> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -47,7 +49,7 @@ export default function ProductList() {
               Price: {item.price}
             </div>
             <div id={"productList-quantity-" + item.id + item.name}>
-              Quantity: {item.quantity}
+              Quantity: {item.quantity}{item.quantity < LOW_STOCK_THRESHOLD && (<span style={{color: 'red', fontWeight: 'bold' }}>  LOW QUANTITY !</span>)}
             </div>
           </li>
         ))}
