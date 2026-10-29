@@ -15,3 +15,8 @@ export type Paginated<T> = {
   page_size: number;
   pages: number;
 };
+
+export type Category = {
+  id: number;
+  name: string;
+};

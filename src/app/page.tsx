@@ -1,4 +1,5 @@
+import CategoryList from "@/components/CategoryList";
 import ProductList from "@/components/ProductList";
 export default function Home() {
-  return <ProductList />; 
+  return (<div><ProductList /><CategoryList/></div>); 
 }
