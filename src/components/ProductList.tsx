@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import type { Product, Paginated } from "@/types/api";
 
-const LOW_STOCK_THRESHOLD = 10
+const LOW_STOCK_THRESHOLD = 10;
 
 export default function ProductList() {
   const [data, setData] = useState<Paginated<Product> | null>(null);
@@ -13,9 +13,7 @@ export default function ProductList() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(
-          "http://3.27.38.78:8000/products?page=1&page_size=20",
-        );
+        const res = await fetch("/api/products?page=1&page_size=20");
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json: Paginated<Product> = await res.json();
         setData(json);
@@ -49,7 +47,13 @@ export default function ProductList() {
               Price: {item.price}
             </div>
             <div id={"productList-quantity-" + item.id + item.name}>
-              Quantity: {item.quantity}{item.quantity < LOW_STOCK_THRESHOLD && (<span style={{color: 'red', fontWeight: 'bold' }}>  LOW QUANTITY !</span>)}
+              Quantity: {item.quantity}
+              {item.quantity < LOW_STOCK_THRESHOLD && (
+                <span style={{ color: "red", fontWeight: "bold" }}>
+                  {" "}
+                  LOW QUANTITY !
+                </span>
+              )}
             </div>
           </li>
         ))}
