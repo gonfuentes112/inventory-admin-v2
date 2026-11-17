@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { Product, Paginated } from "@/types/api";
+import { apiFetch } from "@/lib/api";
 
 const LOW_STOCK_THRESHOLD = 10;
 
@@ -13,7 +14,7 @@ export default function ProductList() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/products?page=1&page_size=20");
+        const res = await apiFetch("/api/products?page=1&page_size=20");
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json: Paginated<Product> = await res.json();
         setData(json);

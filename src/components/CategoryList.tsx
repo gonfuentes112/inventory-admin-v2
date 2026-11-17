@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import type { Category } from "@/types/api";
+import { apiFetch } from "@/lib/api";
 
 export default function CategoryList() {
   const [data, setData] = useState<Category[] | null>(null);
@@ -11,7 +12,7 @@ export default function CategoryList() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/categories");
+        const res = await apiFetch("/api/categories");
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json: Category[] = await res.json();
         setData(json);
