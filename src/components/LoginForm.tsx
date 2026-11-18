@@ -48,33 +48,55 @@ export default function LoginForm({ expired }: { expired: boolean }) {
   }
 
   return (
-    <main>
-      <h1>Login</h1>
+    <main className="mx-auto mt-24 w-full max-w-sm rounded border border-gray-300 p-6 flex flex-col gap-4">
+      <h1 className="text-2xl font-semibold">Login</h1>
       {expired && (
-        <p role="status">Your session has expired. Please log in again.</p>
+        <p
+          role="status"
+          className="rounded bg-yellow-100 p-3 text-sm text-yellow-900"
+        >
+          Your session has expired. Please log in again.
+        </p>
       )}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          id="username"
-          autoComplete="username"
-        />
-        <label htmlFor="username">Username</label>
-        <br />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          id="password"
-          autoComplete="current-password"
-        />
-        <label htmlFor="password">Password</label>
-        <br />
-        {error && <p role="alert">{error}</p>}
-        <br />
-        <button type="submit" disabled={submitting}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="username" className=" text-sm font-medium">
+            Username
+          </label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            id="username"
+            autoComplete="username"
+            className="w-full rounded border border-gray-300 px-3 py-2"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label htmlFor="password" className=" text-sm font-medium">
+            Password
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            id="password"
+            autoComplete="current-password"
+            className="w-full rounded border border-gray-300 px-3 py-2"
+          />
+        </div>
+
+        {error && (
+          <p role="alert" className="text-red-700">
+            {error}
+          </p>
+        )}
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded disabled:opacity-50 "
+        >
           {submitting ? "Logging in..." : "Login"}
         </button>
       </form>
