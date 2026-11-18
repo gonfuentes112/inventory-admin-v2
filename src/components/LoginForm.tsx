@@ -48,12 +48,12 @@ export default function LoginForm({ expired }: { expired: boolean }) {
   }
 
   return (
-    <main className="mx-auto mt-24 w-full max-w-sm rounded border border-gray-300 p-6 flex flex-col gap-4">
+    <main className="mx-auto mt-24 w-full max-w-sm rounded border border-border p-6 flex flex-col gap-4">
       <h1 className="text-2xl font-semibold">Login</h1>
       {expired && (
         <p
           role="status"
-          className="rounded bg-yellow-100 p-3 text-sm text-yellow-900"
+          className="rounded bg-warning-bg p-3 text-sm text-warning-fg"
         >
           Your session has expired. Please log in again.
         </p>
@@ -69,7 +69,7 @@ export default function LoginForm({ expired }: { expired: boolean }) {
             onChange={(e) => setUsername(e.target.value)}
             id="username"
             autoComplete="username"
-            className="w-full rounded border border-gray-300 px-3 py-2"
+            className="w-full rounded border border-border px-3 py-2 bg-background text-foreground"
           />
         </div>
 
@@ -83,19 +83,19 @@ export default function LoginForm({ expired }: { expired: boolean }) {
             onChange={(e) => setPassword(e.target.value)}
             id="password"
             autoComplete="current-password"
-            className="w-full rounded border border-gray-300 px-3 py-2"
+            className="w-full rounded border border-border px-3 py-2 bg-background text-foreground"
           />
         </div>
 
         {error && (
-          <p role="alert" className="text-red-700">
+          <p role="alert" className="text-danger-fg">
             {error}
           </p>
         )}
         <button
           type="submit"
           disabled={submitting}
-          className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded disabled:opacity-50 "
+          className="w-full py-2 bg-primary hover:bg-primary-hover text-white rounded disabled:opacity-50 "
         >
           {submitting ? "Logging in..." : "Login"}
         </button>
