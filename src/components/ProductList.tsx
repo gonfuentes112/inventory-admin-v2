@@ -5,6 +5,12 @@ import type { Product, Paginated } from "@/types/api";
 import { apiFetch } from "@/lib/api";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Button from "./Button";
+import {
+  parseProductQuery,
+  toSearchParams,
+  hasActiveFilters,
+} from "@/lib/productQuery";
+import { withUpdates } from "@/lib/urlParams";
 
 const LOW_STOCK_THRESHOLD = 10;
 const PAGE_SIZE = 20;
@@ -18,12 +24,13 @@ export default function ProductList() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const requestedPage = Number(searchParams.get("page") ?? "1");
+  const query = parseProductQuery(searchParams);
+  const page = query.page;
 
-  const page =
-    Number.isSafeInteger(requestedPage) && requestedPage > 0
-      ? requestedPage
-      : 1;
+  const apiParams = toSearchParams(query);
+  apiParams.set("page_size", String(PAGE_SIZE));
+
+  const queryString = apiParams.toString();
 
   useEffect(() => {
     let ignore = false;
@@ -33,9 +40,7 @@ export default function ProductList() {
       setError(null);
 
       try {
-        const res = await apiFetch(
-          `/api/products?page=${page}&page_size=${PAGE_SIZE}`,
-        );
+        const res = await apiFetch(`/api/products?${queryString}`);
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
@@ -60,12 +65,23 @@ export default function ProductList() {
     return () => {
       ignore = true;
     };
-  }, [page]);
+  }, [queryString]);
 
   if (loading) return <p className="text-muted">loading...</p>;
   if (error) return <p className="text-danger-fg">Error: {error}</p>;
   if (!data) return <p>No data was received</p>;
-  if (data.total === 0) return <p>No products found.</p>;
+  if (data.total === 0) {
+    return hasActiveFilters(query) ? (
+      <div>
+        <p>No products match these filters.</p>
+        <Button onClick={() => router.push(pathname)} className="mt-3">
+          Clear filters
+        </Button>
+      </div>
+    ) : (
+      <p>No products found.</p>
+    );
+  }
 
   return (
     <div>
@@ -73,7 +89,7 @@ export default function ProductList() {
         <div>
           {page >= data.pages ? (
             <p>
-              Invalid page.{" "}
+              Invalid page.
               <Button onClick={() => router.push(`${pathname}?page=1`)}>
                 Go to page 1
               </Button>
@@ -143,7 +159,13 @@ export default function ProductList() {
 
         <div className="flex items-center justify-center gap-3">
           <Button
-            onClick={() => router.push(`${pathname}?page=${page - 1}`)}
+            onClick={() => {
+              const result = withUpdates(searchParams, {
+                page: String(page - 1),
+              });
+
+              router.push(`${pathname}?${result}`);
+            }}
             disabled={page === 1}
           >
             Previous
@@ -154,7 +176,12 @@ export default function ProductList() {
           </span>
 
           <Button
-            onClick={() => router.push(`${pathname}?page=${page + 1}`)}
+            onClick={() => {
+              const result = withUpdates(searchParams, {
+                page: String(page + 1),
+              });
+              router.push(`${pathname}?${result}`);
+            }}
             disabled={page >= data.pages}
           >
             Next
