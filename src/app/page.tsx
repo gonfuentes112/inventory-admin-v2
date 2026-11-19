@@ -1,7 +1,7 @@
-import CategoryList from "@/components/CategoryList";
 import ProductList from "@/components/ProductList";
 import LogoutButton from "@/components/LogoutButton";
 import { Suspense } from "react";
+import ProductFilters from "@/components/ProductFilters";
 export default function Home() {
   return (
     <div>
@@ -11,9 +11,11 @@ export default function Home() {
       <main className="mx-auto max-w-5xl p-6">
         <h1 className="mb-4 text-2xl font-semibold">Products</h1>
         <Suspense fallback={<p className="text-muted">Loading...</p>}>
-          <ProductList />
+          <ProductFilters />
+          <div className="mt-4">
+            <ProductList />
+          </div>
         </Suspense>
-        <CategoryList />
       </main>
     </div>
   );
